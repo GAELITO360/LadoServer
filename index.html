@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración Firebase - Mi Tiendita</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <div id="loading-screen" class="loading-screen">
+        <div class="spinner"></div>
+        <p>Sincronizando con Real-Chat Cloud...</p>
+    </div>
+
+    <div id="auth-view" class="auth-container hidden">
+
+        <div id="card-login" class="auth-card">
+
+            <div class="auth-header">
+
+                <div class="logo">
+                    <i class="fa-solid fa-user-gear admin-icon-main"></i>
+
+                    <span>
+                        Control
+                        <span class="brand-accent">Tiendita</span>
+                    </span>
+                </div>
+
+                <p>
+                    Ingresa con tu cuenta de dueño para administrar tu inventario exclusivo.
+                </p>
+
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+
+                <div class="input-group">
+                    <label for="login-email">
+                        <i class="fa-regular fa-envelope"></i>
+                        Correo de Administrador
+                    </label>
+
+                    <input
+                        type="email"
+                        id="login-email"
+                        placeholder="ejemplo@tiendita.com"
+                        required>
+                </div>
+
+                <div class="input-group">
+                    <label for="login-password">
+                        <i class="fa-solid fa-lock"></i>
+                        Contraseña
+                    </label>
+
+                    <input
+                        type="password"
+                        id="login-password"
+                        placeholder="••••••••"
+                        required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    Ingresar al Panel
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </button>
+
+            </form>
+
+            <div class="auth-switcher">
+                <p>
+                    ¿Eres un dueño nuevo?
+                    <a href="#" onclick="toggleAuthMode(event, 'register')">
+                        Regístrate aquí
+                    </a>
+                </p>
+            </div>
+
+        </div>
+
+        <div id="card-register" class="auth-card hidden">
+
+            <div class="auth-header">
+
+                <div class="logo">
+                    <i class="fa-solid fa-store color-orange"></i>
+
+                    <span>
+                        Nuevo
+                        <span style="color: var(--accent-orange)">
+                            Administrador
+                        </span>
+                    </span>
+                </div>
+
+                <p>
+                    Crea tu cuenta única de dueño.
+                    Tus productos estarán aislados y protegidos.
+                </p>
+
+            </div>
+
+            <form onsubmit="handleRegisterOwner(event)">
+
+                <div class="input-group">
+
+                    <label for="reg-name">
+                        <i class="fa-regular fa-user"></i>
+                        Nombre de la Tienda / Dueño
+                    </label>
+
+                    <input
+                        type="text"
+                        id="reg-name"
+                        placeholder="Ej. Abarrotes El Güero"
+                        required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label for="reg-email">
+                        <i class="fa-regular fa-envelope"></i>
+                        Correo Electrónico
+                    </label>
+
+                    <input
+                        type="email"
+                        id="reg-email"
+                        placeholder="don.chucho@tiendita.com"
+                        required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label for="reg-password">
+                        <i class="fa-solid fa-lock"></i>
+                        Asigna una Clave secreta
+                    </label>
+
+                    <input
+                        type="password"
+                        id="reg-password"
+                        placeholder="Mínimo 6 caracteres"
+                        minlength="6"
+                        required>
+
+                </div>
+
+                <button type="submit" class="btn btn-orange btn-block">
+                    Registrar Tienda en Firebase
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </button>
+
+            </form>
+
+            <div class="auth-switcher">
+                <p>
+                    ¿Ya tienes cuenta?
+                    <a href="#" onclick="toggleAuthMode(event, 'login')">
+                        Inicia sesión
+                    </a>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="dashboard-view" class="dashboard-container hidden">
+
+        <header class="navbar">
+
+            <div class="nav-brand">
+
+                <i class="fa-solid fa-shop store-icon-main"></i>
+
+                <span>
+                    Mi Tiendita
+                    <span class="brand-accent">Control</span>
+                </span>
+
+                <span class="admin-badge">
+                    Proyecto: real-chat-6328f
+                </span>
+
+            </div>
+
+            <div class="nav-actions">
+
+                <span class="welcome-text">
+                    ¡Hola,
+                    <span id="display-owner-name">
+                        Cargando...
+                    </span>!
+                    👋
+                </span>
+
+                <button
+                    class="logout-btn"
+                    onclick="handleLogout()"
+                    title="Cerrar Sesión">
+
+                    <i class="fa-solid fa-power-off"></i>
+                    Salir
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <main class="main-content">
+
+            <section class="summary-widgets">
+
+                <div class="widget-card">
+
+                    <div class="widget-icon bg-green">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+
+                    <div class="widget-info">
+                        <h3 id="widget-total-products">0</h3>
+                        <p>Mis Productos en Nube</p>
+                    </div>
+
+                </div>
+
+                <div class="widget-card">
+
+                    <div class="widget-icon bg-blue">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+
+                    <div class="widget-info">
+                        <h3 id="widget-total-earnings">$0.00</h3>
+                        <p>Ganancias Totales</p>
+                    </div>
+
+                </div>
+
+                <div class="widget-card">
+
+                    <div class="widget-icon bg-orange">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div class="widget-info">
+                        <h3>Filtro UID</h3>
+                        <p>Estante Privado por Dueño</p>
+                    </div>
+
+                </div>
+
+                <div class="widget-card">
+
+                    <div class="widget-icon bg-brown">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+
+                    <div class="widget-info">
+                        <h3>Sincronizado</h3>
+                        <p>Firestore DB Listo</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <div class="dashboard-grid">
+
+                <section class="form-section">
+
+                    <div class="panel-card" id="product-card-container">
+
+                        <h2 id="form-title" class="panel-card-title">
+                            <i class="fa-solid fa-circle-plus color-green"></i>
+                            Agregar Producto
+                        </h2>
+
+                        <p class="panel-card-subtitle">
+                            Los artículos que registres aquí solo pertenecerán a tu sesión activa.
+                        </p>
+
+                        <form id="product-form"
+                            onsubmit="handleSaveProduct(event)">
+
+                            <input
+                                type="hidden"
+                                id="product-id-hidden"
+                                value="">
+
+                            <div class="input-group">
+
+                                <label for="prod-name">
+                                    Nombre del Producto
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="prod-name"
+                                    placeholder="Ej. Jabón de Barra 250g"
+                                    required>
+
+                            </div>
+
+                            <div class="input-group-row">
+
+                                <div class="input-group">
+
+                                    <label for="prod-price">
+                                        Precio al Público ($)
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="prod-price"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="0.00"
+                                        required>
+
+                </div>
+
+                                <div class="input-group">
+
+                                    <label for="prod-stock">
+                                        Cantidad / Stock
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="prod-stock"
+                                        min="0"
+                                        placeholder="0"
+                                        required>
+
+                                </div>
+
+                                <div class="input-group">
+
+                                    <label for="prod-icon">
+                                        Ícono Ilustrativo
+                                    </label>
+
+                                    <select id="prod-icon">
+
+                                        <option value="fa-bottle-water">
+                                            🥛 Botella / Leche
+                                        </option>
+
+                                        <option value="fa-bread-slice">
+                                            🍞 Pan / Harinas
+                                        </option>
+
+                                        <option value="fa-egg">
+                                            🥚 Huevo / Lácteos
+                                        </option>
+
+                                        <option value="fa-mug-hot">
+                                            ☕ Café / Desayuno
+                                        </option>
+
+                                        <option value="fa-apple-whole">
+                                            🍎 Frutas / Verduras
+                                        </option>
+
+                                        <option value="fa-bowl-rice">
+                                            🍚 Arroz / Semillas
+                                        </option>
+
+                                        <option value="fa-box">
+                                            📦 Abarrotes Varios
+                                        </option>
+
+                                        <option value="fa-soap">
+                                            🧼 Limpieza / Cuidado
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <div class="input-group">
+
+                                <label for="prod-desc">
+                                    Descripción Corta / Nota
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="prod-desc"
+                                    placeholder="Ej. Marca libre, empaque biodegradable"
+                                    required>
+
+                            </div>
+
+                            <div class="form-actions">
+
+                                <button
+                                    type="submit"
+                                    id="btn-submit-form"
+                                    class="btn btn-primary btn-block">
+
+                                    Guardar en Estante
+                                    <i class="fa-solid fa-floppy-disk"></i>
+
+                                </button>
+
+                                <button
+                                    type="button"
+                                    id="btn-cancel-edit"
+                                    class="btn btn-text hidden"
+                                    onclick="resetForm()">
+
+                                    Cancelar Edición
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </section>
+
+                <section class="table-section">
+
+                    <div class="panel-card">
+
+                        <h2 class="panel-card-title">
+                            Inventario de mi Negocio
+                        </h2>
+
+                        <p class="panel-card-subtitle">
+                            Productos vinculados de forma segura a tu ID de Firebase.
+                        </p>
+
+                        <div class="table-container">
+
+                            <table class="inventory-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Descripción</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th style="text-align:center;">
+                                            Acciones
+                                        </th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="inventory-table-body">
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-card" style="margin-top: 2rem;">
+                        <h2 class="panel-card-title">
+                            <i class="fa-solid fa-receipt color-green"></i>
+                            Historial de Ventas Directas
+                        </h2>
+                        <p class="panel-card-subtitle">Registro automático de las compras que hacen tus clientes.</p>
+
+                        <div class="table-container">
+                            <table class="inventory-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha / Hora</th>
+                                        <th>Cliente</th>
+                                        <th>Producto</th>
+                                        <th>Cant.</th>
+                                        <th>Total Pago</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sales-table-body">
+                                    <tr>
+                                        <td colspan="5" style="text-align:center;padding:2rem;">
+                                            Esperando compras de clientes...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+        <footer class="main-footer">
+            <p>
+                &copy; 2026 Mi Tiendita Digital -
+                Conectado a real-chat-6328f.
+            </p>
+        </footer>
+
+    </div>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>
