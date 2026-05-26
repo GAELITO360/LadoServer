@@ -1,4 +1,4 @@
-/* ================= CONFIGURACIONES GENERALES Y ESTILO VISUAL ================= */
+
 :root {
     --bg-crema: #fdfaf6;
     --bg-dashboard: #f5efe6;
@@ -23,7 +23,7 @@ body { background-color: var(--bg-dashboard); color: var(--text-main); font-fami
 .color-green { color: var(--accent-green); }
 .color-orange { color: var(--accent-orange); }
 
-/* Pantalla de Carga */
+
 .loading-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: var(--bg-dashboard); display: flex; flex-direction: column;
@@ -37,7 +37,7 @@ body { background-color: var(--bg-dashboard); color: var(--text-main); font-fami
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-screen p { font-family: var(--font-heading); font-weight: 600; color: var(--brown-dark); }
 
-/* ================= BOTONES ================= */
+
 .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
     padding: 0.8rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer;
@@ -59,7 +59,7 @@ body { background-color: var(--bg-dashboard); color: var(--text-main); font-fami
 .btn-delete { background: #ffebee; color: #f44336; }
 .btn-delete:hover { background: #f44336; color: var(--white); }
 
-/* ================= AUTENTICACIÓN TARJETAS ================= */
+
 .auth-container {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;
     padding: 2rem; background: linear-gradient(135deg, #fdfbf7 0%, #ebdcd0 100%);
@@ -87,7 +87,7 @@ body { background-color: var(--bg-dashboard); color: var(--text-main); font-fami
 .auth-switcher a { color: var(--accent-blue); font-weight: 700; text-decoration: none; }
 .auth-switcher a:hover { text-decoration: underline; }
 
-/* ================= PANEL DE CONTROL ================= */
+
 .navbar {
     height: 70px; background: var(--white); border-bottom: 2px solid var(--border-soft);
     display: flex; align-items: center; justify-content: space-between; padding: 0 2rem;
@@ -115,7 +115,7 @@ body { background-color: var(--bg-dashboard); color: var(--text-main); font-fami
 .panel-card-subtitle { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem; }
 .panel-card.editing-mode { border-color: var(--accent-blue); background: #fafcff; }
 
-/* ================= TABLA DE INVENTARIO ================= */
+
 .table-container { overflow-x: auto; }
 .inventory-table { width: 100%; border-collapse: collapse; }
 .inventory-table th { font-family: var(--font-heading); color: var(--brown-dark); background: var(--bg-crema); padding: 0.8rem; border-bottom: 2px solid var(--border-soft); text-align: left; }
@@ -124,7 +124,7 @@ body { background-color: var(--bg-dashboard); color: var(--text-main); font-fami
 .table-prod-cell i { color: var(--brown-light); font-size: 1.1rem; width: 24px; text-align: center; }
 .table-price { color: var(--accent-green); font-family: var(--font-heading); }
 
-/* Toasts */
+
 .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
 .toast { background: var(--brown-dark); color: var(--white); padding: 0.8rem 1.5rem; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 0.5rem; }
 
