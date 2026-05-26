@@ -23,7 +23,7 @@ import {
     onSnapshot 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// ================= CONFIG FIREBASE =================
+
 const firebaseConfig = {
   apiKey: "AIzaSyBBB8xDItXy26YVzhO3YbHitQ1AGbo-jZI",
   authDomain: "tienditadigital.firebaseapp.com",
@@ -33,7 +33,7 @@ const firebaseConfig = {
   appId: "1:460711647500:web:6f24dc5ccd31baf5001129"
 };
 
-// ================= INICIALIZAR FIREBASE AISLADO =================
+
 const appAdmin = initializeApp(firebaseConfig, "AdminAppInstance");
 
 const auth = initializeAuth(appAdmin, {
@@ -46,7 +46,7 @@ let currentUser = null;
 let unsubscribeInventory = null;
 let unsubscribeSales = null;
 
-// ================= MÉTODOS GLOBALES =================
+
 window.toggleAuthMode = toggleAuthMode;
 window.handleRegisterOwner = handleRegisterOwner;
 window.handleLogin = handleLogin;
@@ -56,7 +56,7 @@ window.prepareEdit = prepareEdit;
 window.deleteProduct = deleteProduct;
 window.resetForm = resetForm;
 
-// ================= CAMBIO DE SESIÓN =================
+
 onAuthStateChanged(auth, async (user) => {
     const loadingScreen = document.getElementById('loading-screen');
     const authView = document.getElementById('auth-view');
@@ -64,7 +64,7 @@ onAuthStateChanged(auth, async (user) => {
 
     if (user) {
         try {
-            // Verificar en Firestore si el usuario logueado realmente es un Dueño
+           
             const userDocRef = doc(db, "usuarios", user.uid);
             const userDocSnap = await getDoc(userDocRef);
 
@@ -81,7 +81,7 @@ onAuthStateChanged(auth, async (user) => {
                 listenToUserInventory(user.uid);
                 listenToUserSales(); 
             } else {
-                // Si la cuenta no tiene el rol aún, esperamos un segundo breve por si es un registro nuevo en proceso
+                
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 const reSnap = await getDoc(userDocRef);
                 
@@ -118,7 +118,7 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// ================= TOAST =================
+
 function showNotification(message, isAlert = false) {
     const container = document.getElementById('toast-container');
     if (!container) return;
@@ -139,7 +139,7 @@ function showNotification(message, isAlert = false) {
     }, 2800);
 }
 
-// ================= CAMBIAR LOGIN / REGISTER =================
+
 function toggleAuthMode(event, mode) {
     if (event) event.preventDefault();
     const cardLogin = document.getElementById('card-login');
@@ -154,7 +154,7 @@ function toggleAuthMode(event, mode) {
     }
 }
 
-// ================= REGISTRO DE DUEÑO =================
+
 function handleRegisterOwner(event) {
     event.preventDefault();
     const name = document.getElementById('reg-name').value.trim();
@@ -177,7 +177,7 @@ function handleRegisterOwner(event) {
         })
         .then(() => {
             showNotification("Cuenta de Dueño creada correctamente.");
-            // Forzar actualización visual manual inmediata sin esperar el monitor
+            
             currentUser = userCreated;
             if (document.getElementById('display-owner-name')) {
                 document.getElementById('display-owner-name').innerText = name;
@@ -195,7 +195,7 @@ function handleRegisterOwner(event) {
         });
 }
 
-// ================= LOGIN =================
+
 function handleLogin(event) {
     event.preventDefault();
     const email = document.getElementById('login-email').value.trim().toLowerCase();
@@ -211,12 +211,12 @@ function handleLogin(event) {
         });
 }
 
-// ================= LOGOUT =================
+
 function handleLogout() {
     signOut(auth).then(() => { showNotification("Sesión cerrada."); });
 }
 
-// ================= LEER PRODUCTOS EN TIEMPO REAL =================
+
 function listenToUserInventory(ownerId) {
     const q = query(collection(db, "productos"), where("ownerId", "==", ownerId));
 
@@ -263,7 +263,7 @@ function listenToUserInventory(ownerId) {
     }, (error) => { console.error(error); });
 }
 
-// ================= GUARDAR / ACTUALIZAR PRODUCTO =================
+
 function handleSaveProduct(event) {
     event.preventDefault();
     if (!currentUser) return;
@@ -303,7 +303,7 @@ function handleSaveProduct(event) {
     }
 }
 
-// ================= PREPARAR EDICIÓN =================
+
 function prepareEdit(idDoc, name, price, stock, icon, desc) {
     const cardContainer = document.getElementById('product-card-container');
     const formTitle = document.getElementById('form-title');
@@ -323,7 +323,7 @@ function prepareEdit(idDoc, name, price, stock, icon, desc) {
     document.getElementById('prod-desc').value = desc;
 }
 
-// ================= ELIMINAR =================
+
 function deleteProduct(idDoc, name) {
     if (!confirm(`¿Eliminar "${name}"?`)) return;
     const docRef = doc(db, "productos", idDoc);
@@ -332,7 +332,7 @@ function deleteProduct(idDoc, name) {
         .catch((err) => { showNotification(err.message, true); });
 }
 
-// ================= RESET FORM =================
+
 function resetForm() {
     document.getElementById('product-form').reset();
     document.getElementById('product-id-hidden').value = "";
@@ -348,7 +348,7 @@ function resetForm() {
     if (btnCancel) btnCancel.classList.add('hidden');
 }
 
-// ================= ESCUCHAR COMPRAS AUTOMÁTICAS =================
+
 function listenToUserSales() {
     const q = collection(db, "ganancias");
 
